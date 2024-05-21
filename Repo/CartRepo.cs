@@ -21,9 +21,7 @@ namespace ShoppingCart.Repo
             }
         }
         public int AddItem(int itemId, int quantity)
-        {
-
-           
+        {  
             using (var transaction = _appDbContext.Database.BeginTransaction())
             {
                 try
