@@ -1,0 +1,76 @@
+﻿@model IEnumerable<Item>
+
+@{
+    ViewData["Title"] = "Items";
+}
+<div class="row">
+    <div class="container mb-4 col-2">
+
+        <a asp-action="Create" class="btn btn-success"> Add Item </a>
+
+    </div>
+</div>
+<div class="row">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+    @if (TempData["CartSucssess"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["CartSucssess"]
+        </div>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning" role="alert">
+        No Items were added yet!
+    </div>
+}
+else
+{
+   <table class="table table-hover">
+       <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Description</th>
+      <th scope="col">Category</th>
+      <th scope="col">Price</th>
+      <th scope="col">Cover</th>
+      <th scope="col">Actions</th>
+      <th scope="col">Add To Cart</th>
+    </tr>
+  </thead>
+        <tbody>
+            @foreach(var item in Model){
+                <tr class="table-primary">
+                    <th scope="row">@item.Name</th>
+                    <td>@item.Description</td>
+                    <td>@item.Category.Name</td>
+                    <td>@item.Price</td>
+                    <td>
+                        <img src="@($"{Settings.ItemImageStorePath}/{@item.Cover}")" class="rounded" style="width:100px;height:100px;" />
+                    </td>
+                    <td>
+                        <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-info rounded rounded-3 me-4"> <i class="bi bi-pencil-square"></i> </a>
+                    </td>
+                    <td>
+                        <form method="post" asp-controller="Cart" asp-action="Add">
+                            <input type="hidden" name="itemId" value="@item.Id" />
+                            <div class="input-group">
+                                <input type="number" name="quantity" class="form-control" style="width:50px;" min="1" value="1" />
+                                <button type="submit" class="btn btn-info rounded rounded-3 ms-2">
+                                    <i class="bi bi-cart-check"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

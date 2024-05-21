@@ -1,0 +1,43 @@
+﻿@model CreateItemViewModel
+
+@{
+    ViewData["Title"] = "Create Item";
+}
+
+<form asp-action="Create" enctype="multipart/form-data">
+        <legend>Legend</legend>
+        <div>
+            <label asp-for="Name" class="form-label mt-4"></label>
+            <input asp-for="Name" type="text" class="form-control">
+            <span asp-validation-for="Name" class="text text-danger"> </span>
+        </div>
+        <div>
+        <label asp-for="Description" class="form-label mt-4"></label>
+        <textarea asp-for="Description" rows="5" cols="50" class="form-control">
+          </textarea>
+        <span asp-validation-for="Description" class="text text-danger"> </span>
+         </div>
+        <div>
+            <label asp-for="Price" class="form-label mt-4"></label>
+            <input asp-for="Price" type="number" class="form-control">
+        <span asp-validation-for="Price" class="text text-danger"> </span>
+        </div>
+        <div>
+            <label asp-for="CategoryId" class="form-label mt-4"></label>
+            <select asp-for="CategoryId" class="form-select" asp-items="@Model.CategoriesSelectList">
+            </select>
+        </div>
+        <div>
+            <label asp-for="FormFile" class="form-label mt-4"></label>
+            <input asp-for="FormFile" class="form-control" id="FormFile" type="file">
+        </div>
+        <div class="text-center mt-4">
+        <img src="" class="img-preview rounded d-none" alt="" style="width:200px;height:200px;">
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </fieldset>
+</form>
+
+@section Scripts{
+    <script src="~/js/image_preview.js"></script>
+                  }

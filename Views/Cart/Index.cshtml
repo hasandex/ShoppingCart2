@@ -1,0 +1,46 @@
+﻿@model Cart
+@{
+    ViewData["Title"] = "Cart Index";
+}
+
+@if (Model== null)
+{
+    <div class="alert alert-warning" role="alert">
+        No Items were added to you cart yet!
+    </div>
+}
+else
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Category</th>
+                <th scope="col">Cover</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cart in Model.CartItems)
+            {
+                <tr class="table-primary">
+                    <th scope="row">@cart.Item.Name</th>
+                    <td>@cart.Item.Category.Name</td>     
+                    <td>
+                        <img src="@($"{Settings.ItemImageStorePath}/{cart.Item.Cover}")" class="rounded" style="width:100px;height:100px;" />
+                    </td>
+                    <td>@cart.Quantity</td>
+                    <td>@cart.Item.Price</td>
+                </tr>
+            }
+            <tr class="table-primary">
+                <td colspan="5">
+                    Total Price:
+                    @Model.Total
+                    <span class="text-muted"></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}
