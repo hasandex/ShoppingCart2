@@ -19,6 +19,7 @@ else
                 <th scope="col">Cover</th>
                 <th scope="col">Quantity</th>
                 <th scope="col">Price</th>
+                <th scope="col">Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -32,6 +33,9 @@ else
                     </td>
                     <td>@cart.Quantity</td>
                     <td>@cart.Item.Price</td>
+                    <td>
+                        <a asp-action="Delete" asp-route-itemId="@cart.ItemId" class="rounded"><i class="bi bi-trash3"></i></a>
+                    </td>
                 </tr>
             }
             <tr class="table-primary">

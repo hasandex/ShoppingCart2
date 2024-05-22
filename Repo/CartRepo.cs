@@ -31,7 +31,7 @@ namespace ShoppingCart.Repo
                     {
                         userCart = CreateCart(_userId);
                     }
-                    var cartItem = userCart?.CartItems?.FirstOrDefault(ci => ci.ItemId == itemId);
+                    var cartItem = userCart.CartItems?.FirstOrDefault(ci => ci.ItemId == itemId);
                     if (cartItem != null)
                     {
                         cartItem.Quantity += quantity;
@@ -53,7 +53,7 @@ namespace ShoppingCart.Repo
                         };
                         _appDbContext.CartItems.Add(cartItem);
                     }
-                    userCart.Total += cartItem.Quantity * cartItem.Price;
+                    userCart.Total = userCart.CartItems.Sum(ci => ci.Quantity * ci.Price);
                     _appDbContext.SaveChanges();
                     transaction.Commit();
                     return cartItem.Quantity;
@@ -65,7 +65,6 @@ namespace ShoppingCart.Repo
                 }
             }             
         }
-
         public Cart CreateCart(string userId)
         {
             if (string.IsNullOrEmpty(userId))
@@ -94,10 +93,44 @@ namespace ShoppingCart.Repo
             }
             return cart;
         }
+
+        public CartItem GetCartItem(int itemId)
+        {
+            var cartItem = _appDbContext.CartItems.Where(ci => ci.ItemId == itemId).FirstOrDefault();
+            if(cartItem == null)
+            {
+                return null;
+            }
+            return cartItem;
+        }
+
+        public int RemoveItem(int itemId)
+        {
+            var cart = GetCartByUserId(_userId); 
+            var cartItem = cart.CartItems.Where(ci=>ci.ItemId == itemId).SingleOrDefault(); 
+            if (cartItem != null)
+            {
+                cart.Total -= cartItem.Price * cartItem.Quantity;
+                _appDbContext.CartItems.Remove(cartItem);
+                return _appDbContext.SaveChanges();
+            }
+            return -1;
+        }
+
         public double TotalPrice(string userId)
         {
             var cart = GetCartByUserId(userId);
             return cart.Total;
         }
+        public int Count(string userId)
+        {
+           var cart = GetCartByUserId(userId);
+            if (cart != null)
+            {
+                return cart.CartItems.Count();
+            }
+            return -1;
+        }
+
     }
 }

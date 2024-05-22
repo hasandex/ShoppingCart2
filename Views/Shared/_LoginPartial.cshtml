@@ -11,6 +11,9 @@
             <li class="nav-item">
                 <a id="cart" class="nav-link text-dark" asp-controller="Cart" asp-action="Index" title="Cart"><i class="bi bi-cart-check"></i></a>
             </li>
+            <li class="nav-item">
+                <a id="cartCount" asp-controller="Cart" asp-action="Count" class="nav-link text-dark"></a>
+            </li>
         }
     <li class="nav-item">
         <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>

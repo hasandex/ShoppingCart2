@@ -30,5 +30,19 @@ namespace ShoppingCart.Controllers
             TempData["CartSucssess"] = "the item has been added to yout cart successfully";
             return RedirectToAction(controllerName:"Item",actionName:"Index");
         }
+        public IActionResult Delete(int itemId)
+        {
+            var isDeleted = _cartRepo.RemoveItem(itemId);
+            if(isDeleted == -1)
+            {
+                return BadRequest();
+            }
+            return RedirectToAction("Index");
+        }
+        public IActionResult Count()
+        {
+            var count = _cartRepo.Count(_userId);
+            return Json(count);
+        }
     }
 }
