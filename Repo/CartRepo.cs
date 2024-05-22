@@ -31,7 +31,7 @@ namespace ShoppingCart.Repo
                     {
                         userCart = CreateCart(_userId);
                     }
-                    var cartItem = userCart?.CartItems.FirstOrDefault(ci => ci.ItemId == itemId);
+                    var cartItem = userCart?.CartItems?.FirstOrDefault(ci => ci.ItemId == itemId);
                     if (cartItem != null)
                     {
                         cartItem.Quantity += quantity;
@@ -45,14 +45,15 @@ namespace ShoppingCart.Repo
                         }
                         cartItem = new CartItem
                         {
-                            ItemId = itemId,
+                           // ItemId = itemId,
                             Item = item,
                             Quantity = quantity,
                             CartId = userCart.Id,
                             Price = item.Price
                         };
-                        userCart.CartItems.Add(cartItem);
+                        _appDbContext.CartItems.Add(cartItem);
                     }
+                    userCart.Total += cartItem.Quantity * cartItem.Price;
                     _appDbContext.SaveChanges();
                     transaction.Commit();
                     return cartItem.Quantity;
@@ -62,8 +63,7 @@ namespace ShoppingCart.Repo
                     transaction.Rollback();
                     throw;
                 }
-            }
-               
+            }             
         }
 
         public Cart CreateCart(string userId)
@@ -76,7 +76,7 @@ namespace ShoppingCart.Repo
             {
                 UserId = userId,
             };
-           _appDbContext.Carts.Add(newCart);
+           _appDbContext.Carts.AddAsync(newCart);
            _appDbContext.SaveChanges();
            return newCart;
   
@@ -84,7 +84,7 @@ namespace ShoppingCart.Repo
 
         public Cart GetCartByUserId(string userId)
         {
-            var cart =  _appDbContext.Carts.Include(c=>c.CartItems)
+            var cart = _appDbContext.Carts.Include(c=>c.CartItems)
                 .ThenInclude(ci => ci.Item)
                 .ThenInclude(i=>i.Category)
                 .FirstOrDefault(c=>c.UserId == userId);
